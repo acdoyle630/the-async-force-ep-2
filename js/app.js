@@ -1,22 +1,55 @@
 /*jshint esversion: 6*/
 
-var requestInfo = document.querySelector('#requestResourceButton');
-let contentDisplay;
+const requestInfo = document.querySelector('#requestResourceButton');
 
 requestInfo.addEventListener('click', function(){
-  let display = document.querySelector('#contentContainer');
+
   if(resourceType.value === 'people'){
-    people();
+    people(resourceId.value);
   }
   if(resourceType.value === 'planets'){
-    planets(num);
+    planets(resourceId.value);
   }
   if(resourceType.value === 'starships'){
-    starships(num);
+    starships(resourceId.value);
   }
-  display.innerHTML = contentDisplay;
 });
 
-function people(){
-  console.log('people test');
+//Get character info
+function people(num){
+  oReq = new XMLHttpRequest();
+  oReq.addEventListener('load', updateDisplay);
+  oReq.addEventListener('load', peopleSpecies);
+  oReq.open('GET', 'http://swapi.co/api/people/' + num + '/' );
+  oReq.send();
+}
+//Get character species
+function peopleSpecies(){
+  const requestData = JSON.parse(this.responseText);
+  const species = requestData.species;
+  oReq = new XMLHttpRequest();
+  oReq.addEventListener('load', updateSpecies);
+  oReq.open('GET', species);
+  oReq.send();
+}
+//Append Species
+function updateSpecies(){
+  const requestData = JSON.parse(this.responseText);
+  const display = document.querySelector('#contentContainer');
+  console.log(requestData);
+  const personSpecies = document.createElement('p');
+  personSpecies.innerHTML = requestData.name;
+  display.appendChild("Species: " + personSpecies);
+}
+//Append Name and Gender
+function updateDisplay(){
+  const requestData = JSON.parse(this.responseText);
+  const display = document.querySelector('#contentContainer');
+  console.log(requestData);
+  const personName = document.createElement('h2');
+  const personGender = document.createElement('p');
+  personName.innerHTML = 'Name: ' + requestData.name;
+  personGender.innerHTML = 'Gender: ' + requestData.gender;
+  display.appendChild(personName);
+  display.appendChild(personGender);
 }
