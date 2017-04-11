@@ -120,9 +120,3 @@ function throwError(){
   display.appendChild(errorMessage);
 }
 
-function throwDataError(){
-  const display = document.querySelector('#contentContainer');
-  const errorMessage = document.createElement('h2');
-  errorMessage.innerHTML = 'Error Selection must be a number';
-  display.appendChild(errorMessage);
-}
