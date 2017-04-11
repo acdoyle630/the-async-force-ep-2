@@ -1,6 +1,12 @@
 /*jshint esversion: 6*/
 
 const requestInfo = document.querySelector('#requestResourceButton');
+const clear = document.querySelector('#clear');
+
+clear.addEventListener('click', function(){
+  const display = document.querySelector('#contentContainer');
+  display.innerHTML = '';
+});
 
 requestInfo.addEventListener('click', function(){
 
@@ -36,7 +42,6 @@ function peopleSpecies(){
 function updateSpecies(){
   const requestData = JSON.parse(this.responseText);
   const display = document.querySelector('#contentContainer');
-  console.log(requestData.name);
   const personSpecies = document.createElement('p');
   personSpecies.innerHTML = "Species: " +requestData.name;
   display.appendChild(personSpecies);
@@ -45,13 +50,16 @@ function updateSpecies(){
 function updateDisplay(){
   const requestData = JSON.parse(this.responseText);
   const display = document.querySelector('#contentContainer');
-  console.log(requestData);
-  const personName = document.createElement('h2');
-  const personGender = document.createElement('p');
-  personName.innerHTML = 'Name: ' + requestData.name;
-  personGender.innerHTML = 'Gender: ' + requestData.gender;
-  display.appendChild(personName);
-  display.appendChild(personGender);
+  if(requestData.detail !== 'Not found' ){
+    const personName = document.createElement('h2');
+    const personGender = document.createElement('p');
+    personName.innerHTML = 'Name: ' + requestData.name;
+    personGender.innerHTML = 'Gender: ' + requestData.gender;
+    display.appendChild(personName);
+    display.appendChild(personGender);
+  } else {
+    throwError();
+  }
 }
 
 function planets( num ){
@@ -64,14 +72,57 @@ function planets( num ){
 function updatePlanet(){
   const requestData = JSON.parse(this.responseText);
   const display = document.querySelector('#contentContainer');
-  console.log(requestData);
-  const planetName = document.createElement('h2');
-  const planetTerrain = document.createElement('p');
-  const planetPopulation = document.createElement('p');
-  planetName.innerHTML = 'Name: ' + requestData.name;
-  planetTerrain.innerHTML = 'Terrain: ' + requestData.terrain;
-  planetPopulation.innerHTML = 'Population: ' + requestData.population;
-  display.appendChild(planetName);
-  display.appendChild(planetTerrain);
-  display.appendChild(planetPopulation);
+  if(requestData.detail !== 'Not found' ){
+    const planetName = document.createElement('h2');
+    const planetTerrain = document.createElement('p');
+    const planetPopulation = document.createElement('p');
+    planetName.innerHTML = 'Name: ' + requestData.name;
+    planetTerrain.innerHTML = 'Terrain: ' + requestData.terrain;
+    planetPopulation.innerHTML = 'Population: ' + requestData.population;
+    display.appendChild(planetName);
+    display.appendChild(planetTerrain);
+    display.appendChild(planetPopulation);
+  } else {
+    throwError();
+  }
+}
+
+function starships(num){
+  oReq = new XMLHttpRequest();
+  oReq.addEventListener('error', throwError);
+  oReq.addEventListener('load', updateShip);
+  oReq.open('GET', 'http://swapi.co/api/starships/' + num +'/');
+  oReq.send();
+}
+
+function updateShip(){
+  const requestData = JSON.parse(this.responseText);
+  const display = document.querySelector('#contentContainer');
+  if(requestData.detail !== 'Not found' ){
+    const shipName = document.createElement('h2');
+    const shipManufacture = document.createElement('p');
+    const shiptype = document.createElement('p');
+    shipName.innerHTML = requestData.name;
+    shipManufacture.innerHTML = requestData.manufacturer;
+    shiptype.innerHTML = requestData.starship_class;
+    display.appendChild(shipName);
+    display.appendChild(shipManufacture);
+    display.appendChild(shiptype);
+  } else {
+    throwError();
+  }
+}
+
+function throwError(){
+  const display = document.querySelector('#contentContainer');
+  const errorMessage = document.createElement('h2');
+  errorMessage.innerHTML = 'Error 404 File not found';
+  display.appendChild(errorMessage);
+}
+
+function throwDataError(){
+  const display = document.querySelector('#contentContainer');
+  const errorMessage = document.createElement('h2');
+  errorMessage.innerHTML = 'Error Selection must be a number';
+  display.appendChild(errorMessage);
 }
