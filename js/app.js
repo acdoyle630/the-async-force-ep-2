@@ -66,6 +66,12 @@ function updatePlanet(){
   const display = document.querySelector('#contentContainer');
   console.log(requestData);
   const planetName = document.createElement('h2');
+  const planetTerrain = document.createElement('p');
+  const planetPopulation = document.createElement('p');
   planetName.innerHTML = 'Name: ' + requestData.name;
+  planetTerrain.innerHTML = 'Terrain: ' + requestData.terrain;
+  planetPopulation.innerHTML = 'Population: ' + requestData.population;
   display.appendChild(planetName);
+  display.appendChild(planetTerrain);
+  display.appendChild(planetPopulation);
 }
